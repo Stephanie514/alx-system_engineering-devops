@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Loop through numbers from 1 to 100
+
+for number in {1..100}; do
+  output=""
+  
+  if (( number % 3 == 0 )); then
+    output="Fizz"
+  fi
+
+  if (( number % 5 == 0 )); then
+    output="${output}Buzz"
+  fi
+
+  if [ -z "$output" ]; then
+    output="$number"
+  fi
+
+  echo "$output"
+done
