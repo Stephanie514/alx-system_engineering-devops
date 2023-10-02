@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Initialize an hour variable
+
+hour=0
+
+while [ $hour -le 12 ]
+do
+  echo "Hour: $hour"
+  
+  minute=1
+  
+  while [ $minute -le 59 ]
+  do
+    echo "$minute"
+
+    (( minute++ ))
+    
+    if [ $minute -ge 70 ]
+    then
+      exit 0
+    fi
+  done
+
+  (( hour++ ))
+done
