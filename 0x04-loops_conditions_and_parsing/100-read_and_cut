@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+file="/etc/passwd"
+
+while IFS=: read -r uname _ uid _ home _
+do
+    echo "Username: $uname"
+    echo "User ID: $uid"
+    echo "Home Directory: $home"
+done < "$file"
