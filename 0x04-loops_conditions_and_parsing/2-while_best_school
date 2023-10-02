@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
-
 #Initializing a counter variable
-count=0
 
-#maximum limit
+count=0
 max=10
 
 while [ $count -lt $max ]
