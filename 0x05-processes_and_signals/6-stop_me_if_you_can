@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-
 # Use pkill to stop the process with the name "4-to_infinity_and_beyond"
-sudo pkill -f "4-to_infinity_and_beyond"
+
+pkill -f "4-to_infinity_and_beyond"
