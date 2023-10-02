@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#file that displays username, id and home directory
 
 file="/etc/passwd"
 
