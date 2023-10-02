@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+myfile="/etc/passwd"
+
+# Use awk to extract and display username, user ID, and home directory
+awk -F: '{print "Username:", $1, "User ID:", $3, "Home Directory:", $6}' "$file"
