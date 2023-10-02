@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# Initialize a counter variable
+
+count=1
+
+while [ $count -le 10 ]
+do
+    if [ $count -eq 9 ]
+    then
+        echo "Best School"
+        echo "Hi"
+    else
+        echo "Best School"
+    fi
+
+
+    ((count++))
+done
