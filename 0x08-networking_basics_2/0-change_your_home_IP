@@ -2,9 +2,10 @@
 # Check if running inside Docker
 
 if [ -f "/.dockerenv" ]; then
-
   sudo cp /etc/hosts /etc/hosts.bak
-  sudo sed -i 's/127.0.0.1 localhost/127.0.0.1 localhost\n8.8.8.8 facebook.com/' /etc/hosts
+  sudo sed -i 's/127.0.0.1 localhost/127.0.0.2 localhost/' /etc/hosts
+  sudo sed -i '/facebook.com/d' /etc/hosts
+  echo "8.8.8.8 facebook.com" | sudo tee -a /etc/hosts
   echo "Configuration complete."
 else
   echo "This script should be run inside a Docker container."
