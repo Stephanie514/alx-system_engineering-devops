@@ -2,7 +2,7 @@
 # Check if the number of arguments is less than 1
 
 if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 {IP_ADDRESS}"
+  echo "Usage: 5-is_the_host_on_the_network {IP_ADDRESS}"
   exit 1
 fi
 
