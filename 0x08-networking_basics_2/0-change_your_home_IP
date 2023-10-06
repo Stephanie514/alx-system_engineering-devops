@@ -1,17 +1,12 @@
 #!/usr/bin/env bash
+# Docker environment detected
+# Server configuration
 # Check if running inside Docker
 
 if [ -f "/.dockerenv" ]; then
-
-  tmp_hosts="/tmp/hosts"
-
-  echo "127.0.0.2 localhost" > "$tmp_hosts"
-  echo "8.8.8.8 facebook.com" >> "$tmp_hosts"
-
-  sudo cp "$tmp_hosts" "/etc/hosts"
-  rm "$tmp_hosts"
-
-  echo "Configuration complete."
+  sudo cp /etc/hosts /etc/hosts.bak
+  sudo sed -i 's/127.0.0.1 localhost/127.0.0.2 localhost/' /etc/hosts
+  echo "8.8.8.8 facebook.com" | sudo tee -a /etc/hosts
 else
   echo "This script should be run inside a Docker container."
 fi
