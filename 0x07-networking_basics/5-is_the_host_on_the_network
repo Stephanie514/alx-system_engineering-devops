@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Check if the number of arguments is less than 1
+# Check if an IP address is provided as an argument
 
 if [ "$#" -ne 1 ]; then
   echo "Usage: $0 {IP_ADDRESS}"
