@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Bash script that listens on port 98 on 
+
+sudo ncat -l -p 98 --exec "/bin/cat"
