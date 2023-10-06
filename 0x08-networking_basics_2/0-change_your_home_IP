@@ -1,11 +1,27 @@
 #!/usr/bin/env bash
-# Check if running inside Docker
-# Docker environment detected
-# Server configuration
+# Constants
+
+HOSTS_FILE="/etc/hosts"
+BACKUP_FILE="/etc/hosts.bak"
+
+restore_original_hosts() {
+  if [ -f "$BACKUP_FILE" ]; then
+    sudo cp "$BACKUP_FILE" "$HOSTS_FILE"
+    echo "Restored original hosts file."
+  else
+    echo "No backup found. Hosts file not restored."
+  fi
+}
 
 if [ -f "/.dockerenv" ]; then
-  sudo cp /etc/hosts /etc/hosts.bak
-  sudo sed -i 's/127.0.0.1 localhost/127.0.0.1 localhost\n8.8.8.8 facebook.com/' /etc/hosts
+
+  sudo cp "$HOSTS_FILE" "$BACKUP_FILE"
+
+  sudo sed -i 's/127.0.0.1 localhost/127.0.0.2 localhost/' "$HOSTS_FILE"
+  echo "8.8.8.8   facebook.com" | sudo tee -a "$HOSTS_FILE"
+  
+  echo "Configuration complete."
 else
   echo "This script should be run inside a Docker container."
+  restore_original_hosts
 fi
