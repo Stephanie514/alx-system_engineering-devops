@@ -8,13 +8,10 @@ EOL
 )
 
 if [ -f "/.dockerenv" ]; then
-  # Docker environment detected
-  # Backup the original hosts file
+
   sudo cp /etc/hosts /etc/hosts.bak
 
-  sudo sed -i 's/127.0.0.1[[:space:]]*localhost/127.0.0.2 localhost/' /etc/hosts
-
-  grep -q "facebook.com" /etc/hosts && sudo sed -i '/facebook.com/c\8.8.8.8 facebook.com' /etc/hosts || echo "8.8.8.8 facebook.com" | sudo tee -a /etc/hosts
+  echo "$new_hosts_content" | sudo tee /etc/hosts > /dev/null
 
   echo "Configuration complete."
 else
