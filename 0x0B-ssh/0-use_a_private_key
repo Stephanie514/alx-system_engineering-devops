@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#Connects to school server
+SSH_OPTIONS="-i ~/.ssh/school"
+
+ssh $SSH_OPTIONS ubuntu@10.0.2.15
