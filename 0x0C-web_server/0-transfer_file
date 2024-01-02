@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
-
-# Bash script that transfers a file from our client to a server
-# Check if all 4 parameters are provided
-
+#Bash script that transfers a file from our client to a server
 if [ "$#" -ne 4 ]; then
     echo "Usage: $0 PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY"
     exit 1
@@ -14,6 +11,7 @@ username="$3"
 ssh_key="$4"
 
 scp_command="scp -o StrictHostKeyChecking=no"
+
 if [ -n "$ssh_key" ]; then
     $scp_command -i "$ssh_key" "$file_path" "$username@$server_ip:~/"
 else
