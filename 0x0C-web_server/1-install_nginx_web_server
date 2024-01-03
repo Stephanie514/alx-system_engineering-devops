@@ -14,6 +14,6 @@ server {
     root /var/www/html;
     index index.html index.htm;
 }
-EOF
+" > /etc/nginx/sites-available/default
 
 sudo service nginx restart
