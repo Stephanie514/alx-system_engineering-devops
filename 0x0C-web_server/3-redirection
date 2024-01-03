@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Update package list and install nginx with the -y flag for non-interactive installation
+
+sudo apt-get update
+sudo apt-get install -y nginx
+
+sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default_backup
+
+sudo cat <<EOF | sudo tee /etc/nginx/sites-available/default > /dev/null
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm;
+
+    location /redirect_me {
+        return 301 http://www.redirectedpage.com;
+    }
+
+}
+EOF
+
+sudo service nginx restart
