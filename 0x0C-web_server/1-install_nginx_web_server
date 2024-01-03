@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Update package list and install nginx with the -y flag for non-interactive installation
 
 sudo apt-get update
