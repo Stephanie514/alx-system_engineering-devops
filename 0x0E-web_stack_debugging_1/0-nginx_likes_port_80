@@ -1,0 +1,6 @@
+#!/bin/bash
+
+link="/etc/nginx/sites-enabled/default"
+target="/etc/nginx/sites-available/default"
+
+sudo rm -f "$link" && sudo ln -s "$target" "$link" && sudo service nginx restart
