@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #This configures nginx to listen on port 80
-
 
 l="/etc/nginx/sites-enabled/default"
 t="/etc/nginx/sites-available/default"
