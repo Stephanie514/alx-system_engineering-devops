@@ -3,5 +3,4 @@
 
 l="/etc/nginx/sites-enabled/default"
 t="/etc/nginx/sites-available/default"
-
 sudo rm -f "$l" && sudo ln -s "$t" "$l" && sudo service nginx restart
