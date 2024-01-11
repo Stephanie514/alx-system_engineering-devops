@@ -2,6 +2,5 @@
 #Making a shorter script
 
 sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default
-service nginx stop
 service nginx start
 rm /run/nginx.pid
