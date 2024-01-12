@@ -1,23 +1,22 @@
 #!/usr/bin/env bash
 # Update package list and install nginx with the -y flag for non-interactive installation
+# It configures an Nginx server so that /redirect_me redirects to another page.
+# Redirection is configured as a "301 Moved Permanently"
 
-sudo apt-get update
-sudo apt-get install -y nginx
+apt-get update
+apt-get install -y nginx
 
-sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default_backup
-
-sudo cat <<EOF | sudo tee /etc/nginx/sites-available/default > /dev/null
-server {
-    listen 80 default_server;
+mkdir /etc/nginx/html
+touch /etc/nginx/html/index.html
+echo "Holberton School" > /etc/nginx/html/index.html
+printf %s "server {
+    listen 80;
     listen [::]:80 default_server;
-    root /var/www/html;
-    index index.html index.htm;
-
+    root   /etc/nginx/html;
+    index  index.html index.htm;
     location /redirect_me {
-        return 301 http://www.redirectedpage.com;
+        return 301 http://cuberule.com/;
     }
+}" > /etc/nginx/sites-available/default
 
-}
-EOF
-
-sudo service nginx restart
+service nginx restart
