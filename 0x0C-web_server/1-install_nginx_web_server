@@ -1,19 +1,29 @@
 #!/usr/bin/env bash
 # Update package list and install nginx with the -y flag for non-interactive installation
 
-sudo apt-get update
+echo "Installing Nginx..."
+sudo apt-get update -y
 sudo apt-get install -y nginx
 
-sudo mkdir -p /etc/nginx/html
-echo "Hello World!" > /etc/nginx/html/index.html
-
+# Configure Nginx
+echo "Configuring Nginx..."
 sudo cat <<EOF | sudo tee /etc/nginx/sites-available/default > /dev/null
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
-    root /etc/nginx/html;
+    root /var/www/html;
     index index.html index.htm;
+
+    server_name _;
+
+    location / {
+        return 200 "Hello World!\\n";
+    }
 }
 EOF
 
+# Restart Nginx
+echo "Restarting Nginx..."
 sudo service nginx restart
+
+echo "Nginx installation and configuration completed!"
