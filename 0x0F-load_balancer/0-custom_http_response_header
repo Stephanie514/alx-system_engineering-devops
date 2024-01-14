@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 # Install Nginx on an Ubuntu web server
 
 echo "Installing Nginx..."
