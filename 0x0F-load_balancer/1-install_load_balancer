@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Installs and configures HAProxy on lb-01 server
+# Install HAProxy
+sudo apt-get update -y
+sudo apt-get install -y haproxy
+
+# Enable management via the init script
+echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
+
+# Configure HAProxy to use port 8080
+sudo tee /etc/haproxy/haproxy.cfg > /dev/null <<EOT
+frontend stephanie514_tech
+    timeout client 30000
+    bind 0:8080
+    default_backend stephanie514_tech_backend
+
+backend stephanie514_tech_backend
+    timeout connect 3000
+    timeout server 30000
+    balance roundrobin
+    server 403446-web-01 35.153.79.4:80 check
+    server 403446-web-02 54.237.8.203:80 check
+EOT
+
+# Restart HAProxy
+sudo service haproxy restart
+
+echo "HAProxy installation and configuration completed!"
