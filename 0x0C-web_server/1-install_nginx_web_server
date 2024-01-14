@@ -4,14 +4,14 @@
 sudo apt-get update
 sudo apt-get install -y nginx
 
-sudo mkdir -p /var/www/html
-echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
+sudo mkdir -p /etc/nginx/html
+echo "Hello World!" > /etc/nginx/html/index.html
 
 sudo cat <<EOF | sudo tee /etc/nginx/sites-available/default > /dev/null
 server {
     listen 80 default_server;
     listen [::]:80 default_server;
-    root /var/www/html;
+    root /etc/nginx/html;
     index index.html index.htm;
 }
 EOF
