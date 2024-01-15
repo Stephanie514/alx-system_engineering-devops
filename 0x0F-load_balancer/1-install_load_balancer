@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Installs and configures HAProxy on lb-01 server
 
+# Replace with your student ID
+STUDENT_ID=403446
+
 # Install HAProxy
 sudo apt-get update -y
 sudo apt-get install -y haproxy
@@ -19,8 +22,8 @@ backend stephanie514_tech_backend
     timeout connect 3000
     timeout server 30000
     balance roundrobin
-    server 403446-web-01 35.153.79.4:80 check
-    server 403446-web-02 54.237.8.203:80 check
+    server ${STUDENT_ID}-web-01 35.153.79.4:80 check
+    server ${STUDENT_ID}-web-02 54.237.8.203:80 check
 EOT
 
 # Restart HAProxy
