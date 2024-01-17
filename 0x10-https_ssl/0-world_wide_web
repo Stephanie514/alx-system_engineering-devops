@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# script that will display information about subdomains
+
+print_subdomain_info() {
+    # Use dig, grep, sed, and awk to extract and format information
+    dig "$1" | grep -A1 'ANSWER SECTION:' | sed -r "s/$1./$2/g" | awk -F" " ' NR==2 { printf "The subdomain %s is a %s record and points to %s\n", $1, $4, $5 }'
+}
+
+# Check if two arguments are provided
+if [ "$#" -eq 2 ]; then
+    print_subdomain_info "$2.$1" "$2"
+else
+    print_subdomain_info "www.$1" "www"
+    print_subdomain_info "lb-01.$1" "lb-01"
+    print_subdomain_info "web-01.$1" "web-01"
+    print_subdomain_info "web-02.$1" "web-02"
+fi
