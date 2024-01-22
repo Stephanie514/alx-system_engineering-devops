@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#Connects to school server
+SSH_OPTIONS="-i ~/.ssh/school"
+
+ssh $SSH_OPTIONS ubuntu@54.237.8.203
