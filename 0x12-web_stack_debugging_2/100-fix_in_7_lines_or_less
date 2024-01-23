@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Fixes a web server to run Nginx as the nginx user listening on port 8080.
-[ "$EUID" -ne 0 ] && { echo "Please run this script as root or using sudo."; exit 1; }
-pkill apache2; sed -i 's/80/8080/g' /etc/nginx/sites-enabled/default
-chown -R nginx:nginx /etc/nginx/ && chmod -R 700 /etc/nginx/
-sudo -u nginx service nginx restart
-echo "Nginx is now configured to run as nginx user and listening on port 8080."
+# This fixes a web server to run Nginx as the nginx user listening on port 8080.
+sed -i "s/#user www-data/user nginx/" /etc/nginx/nginx.conf
+sed -i "s/80/8080/g" /etc/nginx/sites-available/default
+chmod 644 /etc/nginx/nginx.conf
+pkill apache2
+sudo -u nginx service nginx start
