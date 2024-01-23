@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Nginx running as the nginx user.
+
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run this script as root or using sudo."
+    exit 1
+fi
+
+pkill apache2
+sed -i 's/80/8080/g' /etc/nginx/sites-enabled/default
+chown -R nginx:nginx /etc/nginx/
+chmod -R 700 /etc/nginx/
+sudo -u nginx service nginx restart
+
+echo "Nginx is now configured to run as nginx user and listening on port 8080."
