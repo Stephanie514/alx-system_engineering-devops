@@ -1,25 +1,36 @@
 #!/usr/bin/python3
-"""This Returns to-do list information for a given employee ID."""
+"""Returns to-do list information for a given employee ID."""
 import json
+import urllib.parse
 import urllib.request
 import sys
 
-if __name__ == "__main__":
+
+def get_user_info(employee_id):
+    url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
+    with urllib.request.urlopen(url) as response:
+        user = json.loads(response.read().decode())
+    return user
+
+
+def get_user_todos(employee_id):
+    url = "https://jsonplaceholder.typicode.com/todos"
+    params = {"userId": employee_id}
+    data = urllib.parse.urlencode(params).encode()
+    with urllib.request.urlopen(url, data=data) as response:
+        todos = json.loads(response.read().decode())
+    return todos
+
+
+def main():
     if len(sys.argv) != 2:
         print("Usage: {} <employee_id>".format(sys.argv[0]))
         sys.exit(1)
 
     employee_id = sys.argv[1]
-    url = "https://jsonplaceholder.typicode.com/"
 
-    with urllib.request.urlopen(
-            url + "users/{}".format(employee_id)) as response:
-        user = json.loads(response.read().decode())
-
-    with urllib.request.urlopen(
-            url + "todos", data=b'userId={}'.format(
-                employee_id.encode())) as response:
-        todos = json.loads(response.read().decode())
+    user = get_user_info(employee_id)
+    todos = get_user_todos(employee_id)
 
     completed = [t.get("title") for t in todos if t.get("completed")]
     total_tasks = len(todos)
@@ -28,4 +39,8 @@ if __name__ == "__main__":
         user.get("name"), len(completed), total_tasks))
 
     for c in completed:
-        print("\t {}".format(c))
+        print("\t{}".format(c))
+
+
+if __name__ == "__main__":
+    main()
