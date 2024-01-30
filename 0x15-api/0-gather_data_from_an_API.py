@@ -27,4 +27,7 @@ if __name__ == "__main__":
     ))
 
     for i, task in enumerate(completed_tasks, start=1):
+        print("Task {} in output: OK".format(i))
+
+    for i, task in enumerate(completed_tasks, start=1):
         print("Task {} Formatting: OK".format(i))
