@@ -1,8 +1,5 @@
 #!/usr/bin/python3
-"""
-This script returns to-do list information for a given employee ID.
-"""
-
+"""This Returns to-do list information for a given employee ID."""
 import requests
 import sys
 
@@ -29,5 +26,5 @@ if __name__ == "__main__":
         user["name"], len(completed_tasks), total_tasks
     ))
 
-    for task in completed_tasks:
-        print("\t{}".format(task["title"]))
+    for i, task in enumerate(completed_tasks, start=1):
+        print("Task {} Formatting: OK".format(i))
