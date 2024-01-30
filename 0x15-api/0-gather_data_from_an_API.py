@@ -8,15 +8,15 @@ if __name__ == "__main__":
 
     employee_id = sys.argv[1]
 
-    user_resp = requests.get(url + "users/{}".format(employee_id))
+    user_respo = requests.get(url + "users/{}".format(employee_id))
 
-    user = user_resp.json()
+    user = user_respo.json()
 
     params = {"userId": employee_id}
 
-    todos_resp = requests.get(url + "todos", params=params)
+    todos_respo = requests.get(url + "todos", params=params)
 
-    todos = todos_resp.json()
+    todos = todos_respo.json()
 
     completed = []
 
