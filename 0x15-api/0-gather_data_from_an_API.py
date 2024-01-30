@@ -14,7 +14,9 @@ if __name__ == "__main__":
     user_response = requests.get(url + "users/{}".format(employee_id))
     user = user_response.json()
 
-    todos_response = requests.get(url + "todos", params={"userId": employee_id})
+    todos_url = url + "todos"
+    params = {"userId": employee_id}
+    todos_response = requests.get(todos_url, params=params)
     todos = todos_response.json()
 
     completed_tasks = [task for task in todos if task["completed"]]
