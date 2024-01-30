@@ -4,27 +4,28 @@ import requests
 import sys
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: {} <employee_id>".format(sys.argv[0]))
-        sys.exit(1)
+    url = "https://jsonplaceholder.typicode.com/"
 
-    employee_id = sys.argv[1]
+    empl_id = sys.argv[1]
 
-    users_url = "https://jsonplaceholder.typicode.com/users"
-    todos_url = "https://jsonplaceholder.typicode.com/todos"
+    user_resp = requests.get(url + "users/{}".format(empl_id))
 
-    user_response = requests.get(f"{users_url}/{employee_id}")
-    user = user_response.json()
+    user = user_resp.json()
 
-    todo_response = requests.get(todos_url, params={"userId": employee_id})
-    todo = todo_response.json()
+    params = {"userId": empl_id}
 
-    completed_tasks = [task for task in todo if task["completed"]]
-    total_tasks = len(todo)
+    todos_resp = requests.get(url + "todos", params=params)
 
-    print("Employee {} is done with tasks({}/{}):".format(
-        user["name"], len(completed_tasks), total_tasks
-    ))
+    todos = todos_resp.json()
 
-    for task in completed_tasks:
-        print("\t{}".format(task["title"]))
+    completed = []
+
+    for todo in todos:
+        if todo.get("completed") is True:
+            completed.append(todo.get("title"))
+
+    print("Employee {} is done with tasks({}/{})".format(
+        user.get("name"), len(completed), len(todos)))
+
+    for complete in completed:
+        print("\t{}".format(complete))
