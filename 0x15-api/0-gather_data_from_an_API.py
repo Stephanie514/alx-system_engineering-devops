@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-"""This Returns to-do list information for a given employee ID."""
+"""
+This script returns to-do list information for a given employee ID.
+"""
+
 import requests
 import sys
 
@@ -10,9 +13,14 @@ if __name__ == "__main__":
 
     employee_id = sys.argv[1]
 
-    url = "https://jsonplaceholder.typicode.com/"
-    user = requests.get(url + "users/{}".format(employee_id)).json()
-    todo = requests.get(url + "todos", params={"userId": employee_id}).json()
+    users_url = "https://jsonplaceholder.typicode.com/users"
+    todos_url = "https://jsonplaceholder.typicode.com/todos"
+
+    user_response = requests.get(f"{users_url}/{employee_id}")
+    user = user_response.json()
+
+    todo_response = requests.get(todos_url, params={"userId": employee_id})
+    todo = todo_response.json()
 
     completed_tasks = [task for task in todo if task["completed"]]
     total_tasks = len(todo)
@@ -22,4 +30,4 @@ if __name__ == "__main__":
     ))
 
     for task in completed_tasks:
-        print("\t {}".format(task["title"]))
+        print("\t{}".format(task["title"]))
