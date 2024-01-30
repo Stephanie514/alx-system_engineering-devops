@@ -6,13 +6,13 @@ import sys
 if __name__ == "__main__":
     url = "https://jsonplaceholder.typicode.com/"
 
-    empl_id = sys.argv[1]
+    employee_id = sys.argv[1]
 
-    user_resp = requests.get(url + "users/{}".format(empl_id))
+    user_resp = requests.get(url + "users/{}".format(employee_id))
 
     user = user_resp.json()
 
-    params = {"userId": empl_id}
+    params = {"userId": employee_id}
 
     todos_resp = requests.get(url + "todos", params=params)
 
