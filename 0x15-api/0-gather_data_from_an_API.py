@@ -26,8 +26,5 @@ if __name__ == "__main__":
         user["name"], len(completed_tasks), total_tasks
     ))
 
-    for i, task in enumerate(completed_tasks, start=1):
-        print("Task {} in output: OK".format(i))
-
-    for i, task in enumerate(completed_tasks, start=1):
-        print("Task {} Formatting: OK".format(i))
+    for task in completed_tasks:
+        print("\t{}".format(task["title"]))
