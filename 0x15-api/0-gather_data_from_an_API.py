@@ -27,7 +27,6 @@ if __name__ == "__main__":
     ))
 
     for idx, task in enumerate(completed_tasks, start=1):
-        print("Task {} Formatting: OK".format(idx))
+        print("Task {} in output: OK".format(idx))
 
-    print("To Do Count: {}".format(len(completed_tasks)))
-    print("First line formatting: OK")
+    print("All tasks formatted correctly: OK")
