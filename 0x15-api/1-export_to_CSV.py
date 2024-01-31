@@ -9,13 +9,18 @@ if __name__ == "__main__":
     user_id = sys.argv[1]
     url = "https://jsonplaceholder.typicode.com/"
 
-    user = requests.get(f"{url}users/{user_id}").json()
-    username = user.get("username")
-
     todos_url = f"{url}todos"
     todos_params = {"userId": user_id}
+
     todos_response = requests.get(todos_url, params=todos_params)
     todos = todos_response.json()
+
+    if todos:
+        user = todos[0].get("user", {})
+        username = user.get("username", "")
+    else:
+        print(f"No todos found for user ID: {user_id}")
+        sys.exit(1)
 
     csv_file_path = f"{user_id}.csv"
 
