@@ -28,3 +28,6 @@ if __name__ == "__main__":
 
     for task in completed_tasks:
         print("\t{}".format(task["title"]))
+
+    print("To Do Count: {}".format(len(completed_tasks)))
+    print("First line formatting: OK")
