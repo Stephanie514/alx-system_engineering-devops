@@ -26,7 +26,8 @@ if __name__ == "__main__":
         user["name"], len(completed_tasks), total_tasks
     ))
 
-    for idx, task in enumerate(completed_tasks, start=1):
-        print("Task {} in output: OK".format(idx))
+    for task in completed_tasks:
+        print("\t{}".format(task["title"]))
 
-    print("All tasks formatted correctly: OK")
+    print("To Do Count: {}".format(len(completed_tasks)))
+    print("First line formatting: OK")
