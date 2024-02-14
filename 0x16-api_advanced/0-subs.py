@@ -2,6 +2,7 @@
 "subscribers count"
 
 import requests
+import time
 
 
 def number_of_subscribers(subreddit):
@@ -16,4 +17,4 @@ def number_of_subscribers(subreddit):
         return 0
     else:
         data = response.json()
-        return data['data']['subscribers']
+        return data.get('data', {}).get('subscribers', 0)
