@@ -6,7 +6,9 @@ import requests
 
 
 def recurse(subreddit, hot_list=None, after=None):
-    """returning top ten post titles recursively"""
+    """
+    Recursively retrieves top post titles from a given subreddit
+    """
     if hot_list is None:
         hot_list = []
 
