@@ -36,6 +36,7 @@ def recurse(subreddit, hot_list=None, after=None):
     else:
         return None
 
+
 user_subreddit = input("Enter the subreddit: ")
 result = recurse(user_subreddit)
 print(result)
