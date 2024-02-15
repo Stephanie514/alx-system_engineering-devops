@@ -18,3 +18,5 @@ def number_of_subscribers(subreddit):
     else:
         data = response.json()
         return data.get('data', {}).get('subscribers', 0)
+
+top_ten('your_subreddit')
