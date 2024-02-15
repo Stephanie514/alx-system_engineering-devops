@@ -1,22 +1,32 @@
 #!/usr/bin/python3
-"subscribers count"
+"""
+Get the number of subscribers for a given subreddit.
+"""
 
 import requests
-import time
+
+REDDIT_API_URL = "https://www.reddit.com/r/{}/about.json"
+HEADERS = {'User-Agent': 'Mozilla/5.0'}
 
 
 def number_of_subscribers(subreddit):
-    url = f"https://www.reddit.com/r/{subreddit}/about.json"
-    headers = {'User-Agent': 'Mozilla/5.0'}
+    """
+    Get the number of subscribers for a given subreddit.
+    """
+    url = REDDIT_API_URL.format(subreddit)
 
-    response = requests.get(url, headers=headers, allow_redirects=False)
+    try:
+        response = requests.get(url, headers=HEADERS, allow_redirects=False)
+        response.raise_for_status()
 
-    if response.status_code == 404:
-        return 0
-    elif response.status_code != 200:
-        return 0
-    else:
         data = response.json()
-        return data.get('data', {}).get('subscribers', 0)
+        return data['data']['subscribers']
 
-top_ten('your_subreddit')
+    except requests.RequestException as e:
+        print(f"Error: {e}")
+        return 0
+
+
+subreddit_name = "python"
+subscribers_count = number_of_subscribers(subreddit_name)
+print(f"The subreddit '{subreddit_name}' has {subscribers_count} subscribers.")
