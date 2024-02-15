@@ -5,12 +5,15 @@ Module for count_words function
 import requests
 
 
-def count_words(subreddit, search_words, new_after='', word_count={}):
+def count_words(subreddit, search_words, new_after='', word_count=None):
     """
-    This writes a recursive function that queries the Reddit API,
+    This is a recursive function that queries the Reddit API,
     parses the title of all hot articles, and prints a
     sorted count of given keywords
     """
+
+    if word_count is None:
+        word_count = {}
 
     search_words = list(map(lambda x: x.lower(), search_words))
 
@@ -38,7 +41,9 @@ def count_words(subreddit, search_words, new_after='', word_count={}):
         for search_word in search_words:
             for word in title.lower().split():
                 if search_word == word:
-                    word_count[search_word] = word_count.get(search_word, 0) + 1
+                    word_count[search_word] = (
+                        word_count.get(search_word, 0) + 1
+                    )
 
     new_after = data.get('after', None)
 
