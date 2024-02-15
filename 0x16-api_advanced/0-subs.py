@@ -1,10 +1,15 @@
 #!/usr/bin/python3
-"Get the number of subscribers for a given subreddit."
+"""
+Gets the number of subscribers for a given subreddit.
+"""
 
 import requests
 
 
-def def def number_of_subscribers(subreddit):
+def number_of_subscribers(subreddit):
+    """
+    Gets the number of subscribers for a given subreddit.
+    """
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
     headers = {'User-Agent': 'Mozilla/5.0'}
     response = requests.get(url, headers=headers, allow_redirects=False)
