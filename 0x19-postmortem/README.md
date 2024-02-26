@@ -1,4 +1,4 @@
-Load Balancer Configuration Issue:
+The Load Balancer Configuration Issue:
 
 Duration: Specify when the load balancer misconfiguration was detected and resolved.
 Impact: Discuss how the misconfiguration affected traffic distribution and user experience.
