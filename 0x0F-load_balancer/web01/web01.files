@@ -1,0 +1,259 @@
+ubuntu@403446-web-01:~$ cat 0-custom_http_response_header
+#!/usr/bin/env bash
+# Install Nginx on an Ubuntu web server
+
+echo "Installing Nginx..."
+sudo apt-get update -y
+sudo apt-get install -y nginx
+
+# Getting the hostname
+hostname=$(hostname)
+
+# Configure Nginx
+echo "Configuring Nginx..."
+sudo cat <<EOF | sudo tee /etc/nginx/sites-available/default > /dev/null
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm;
+
+    server_name _;
+
+    location / {
+        return 200 "Hello World!\\n";
+    }
+
+    # Custom HTTP response header with the actual hostname
+    add_header X-Served-By $hostname;
+}
+EOF
+
+# Restart Nginx
+echo "Restarting Nginx..."
+sudo service nginx restart
+
+echo "Nginx installation and configuration completed!"
+ubuntu@403446-web-01:~$ cat 0-setup_web_static.sh
+#!/usr/bin/env bash
+# Update package list and install Nginx
+#Bash script that sets up your web servers for the deployment of web_static
+sudo apt-get update
+sudo apt-get -y install nginx
+
+# Create necessary directories
+sudo mkdir -p /data/web_static/{releases/test,shared,current}
+
+sudo echo "<html>
+ <head>
+ </head>
+ <body>
+   Holberton School
+ </body>
+</html>" | sudo tee /data/web_static/releases/test/index.html > /dev/null
+
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
+
+sudo chown -R ubuntu:ubuntu /data/
+
+# Update Nginx configuration
+config_update="location /hbnb_static {\n    alias /data/web_static/current/;\n}"
+sudo sed -i "/listen 80 default_server/a $config_update" /etc/nginx/sites-enabled/default
+
+# Restarting Nginx
+sudo service nginx restart
+ubuntu@403446-web-01:~$ cat 1-install_nginx_web_server
+#!/usr/bin/env bash
+# Update package list and install nginx with the -y flag for non-interactive installation
+
+echo "Installing Nginx..."
+sudo apt-get update -y
+sudo apt-get install -y nginx
+
+# Configure Nginx
+echo "Configuring Nginx..."
+sudo cat <<EOF | sudo tee /etc/nginx/sites-available/default > /dev/null
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm;
+
+    server_name _;
+
+    location / {
+        return 200 "Hello World!\\n";
+    }
+}
+EOF
+
+# Restart Nginx
+echo "Restarting Nginx..."
+sudo service nginx restart
+
+echo "Nginx installation and configuration completed!"
+ubuntu@403446-web-01:~$ cat installNGINX
+#!/usr/bin/env bash
+# Install Nginx on a ubuntu webserver
+
+# Updates package with superUser priviledges
+# & installs Nginx on Ubuntu
+echo -e "Installing Nginx for you! ;-)\n"
+sudo apt-get update -y
+sudo apt-get install -y nginx
+
+# Starts Nginx &
+# Configure Nginx to listen on port 80
+sudo service nginx start
+
+sudo bash -c 'echo "server {
+    listen      80 default_server;
+    listen      [::]:80 default_server;
+
+    root        /var/www/html;
+    index       index.html index.htm;
+
+    server_name _;
+
+    location / {
+        return 200 \"Hello World!\\n\";
+    }
+}" > /etc/nginx/sites-available/default'
+
+# Restart Nginx
+sudo service nginx restart
+
+ubuntu@403446-web-01:~$ cat 2-do_deploy_web_static.py
+#!/usr/bin/python3
+"""
+Fabric script that distributes an archive to your web servers
+"""
+
+from datetime import datetime
+from fabric.api import *
+import os
+
+env.hosts = ["34.203.29.111", "3.84.158.149"]
+env.user = "ubuntu"
+
+
+def do_pack():
+    """
+        Return the archive path if the archive has generated correctly.
+    """
+    local("mkdir -p versions")
+    date = datetime.now().strftime("%Y%m%d%H%M%S")
+    archived_f_path = "versions/web_static_{}.tgz".format(date)
+    t_gzip_archive = local("tar -cvzf {} web_static".format(archived_f_path))
+
+    if t_gzip_archive.succeeded:
+        return archived_f_path
+    else:
+        return None
+
+
+def do_deploy(archive_path):
+    """Distribute archive."""
+    if not os.path.exists(archive_path):
+        return False
+
+    try:
+        # Extracting information from the archive path
+        archive_filename = os.path.basename(archive_path)
+        version_folder = "/data/web_static/releases/{}/".format(
+            archive_filename[:-4])
+
+        put(archive_path, "/tmp/")
+
+
+        run("sudo mkdir -p {}".format(version_folder))
+        run("sudo tar -xzf /tmp/{} -C {}/".
+            format(archive_filename, version_folder))
+
+        run("sudo rm /tmp/{}".format(archive_filename))
+
+        run("sudo mv -f {}/web_static/* {}".
+            format(version_folder, version_folder))
+
+        run("sudo rm -rf {}/web_static".format(version_folder))
+
+        run("sudo rm -rf /data/web_static/current")
+
+        run("sudo ln -s {} /data/web_static/current".format(version_folder))
+
+        print("New version deployed!")
+        return True
+
+    except Exception as e:
+        return False
+ubuntu@403446-web-01:~$ cat 4-reload_gunicorn_no_downtime
+#!/usr/bin/env bash
+# Gracefully reloads the Gunicorn
+
+grep gunicorn | xargs kill -HUP
+ubuntu@403446-web-01:~$ cat mysql_install_5.7
+#!/usr/bin/env bash
+sudo apt update
+sudo apt-key add signature.key
+sudo sh -c 'echo "deb http://repo.mysql.com/apt/ubuntu bionic mysql-5.7" >> /etc/apt/sources.list.d/mysql.list'
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B7B3B788A8D3785C
+sudo apt-get update
+sudo apt-cache policy mysql-server
+sudo apt install -f mysql-client=5.7* mysql-community-server=5.7* mysql-server=5.7*
+ubuntu@403446-web-01:~$ ls
+0-custom_http_response_header  2-do_deploy_web_static.py      AirBnB_clone_v3  ddagent-install.log  mysql_install_5.7
+0-setup_web_static.sh          4-reload_gunicorn_no_downtime  AirBnB_clone_v4  installNGINX         signature.key
+1-install_nginx_web_server     AirBnB_clone_v2                airbnbC2         installed,           temp_mysql_v
+ubuntu@403446-web-01:~$ cat temp_mysql_v
+mysql  Ver 14.14 Distrib 5.7.42, for Linux (x86_64) using  EditLine wrapper
+ubuntu@403446-web-01:~$ cat installed,
+ubuntu@403446-web-01:~$ cat signature.key
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: SKS 1.1.6
+Comment: Hostname: pgp.mit.edu
+
+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
+sTSKHe+QnnnoFmu4gnmDU31i
+=Xqbo
+-----END PGP PUBLIC KEY BLOCK-----

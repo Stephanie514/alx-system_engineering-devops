@@ -1,0 +1,187 @@
+ubuntu@403446-web-02:~$ ls
+0-block_all_incoming_traffic_but  0-setup_web_static.sh       2-do_deploy_web_static.py  signature.key
+0-custom_http_response_header     1-install_nginx_web_server  mysqlinstall_5.7           temp_mysql_v
+ubuntu@403446-web-02:~$ cat 0-block_all_incoming_traffic_but
+#!/usr/bin/env bash
+#This onfigure ufw so that it blocks all incoming traffic
+#except the following TCP ports: 22 (SSH) 443 (HTTPS SSL) 80 (HTTP)
+
+sudo apt install ufw
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 80/tcp
+sudo ufw enable
+sudo ufw status verbose
+ubuntu@403446-web-02:~$ cat 0-custom_http_response_header
+#!/usr/bin/env bash
+# Install Nginx on an Ubuntu web server
+
+echo "Installing Nginx..."
+sudo apt-get update -y
+sudo apt-get install -y nginx
+
+# Getting the hostname
+hostname=$(hostname)
+
+# Configure Nginx
+echo "Configuring Nginx..."
+sudo cat <<EOF | sudo tee /etc/nginx/sites-available/default > /dev/null
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm;
+
+    server_name _;
+
+    location / {
+        return 200 "Hello World!\\n";
+    }
+
+    # Custom HTTP response header with the actual hostname
+    add_header X-Served-By $hostname;
+}
+EOF
+
+# Restart Nginx
+echo "Restarting Nginx..."
+sudo service nginx restart
+
+echo "Nginx installation and configuration completed!"
+ubuntu@403446-web-02:~$ cat 0-setup_web_static.sh
+#!/usr/bin/env bash
+# Update package list and install Nginx
+#Bash script that sets up your web servers for the deployment of web_static
+sudo apt-get update
+sudo apt-get -y install nginx
+
+# Create necessary directories
+sudo mkdir -p /data/web_static/{releases/test,shared,current}
+
+sudo echo "<html>
+ <head>
+ </head>
+ <body>
+   Holberton School
+ </body>
+</html>" | sudo tee /data/web_static/releases/test/index.html > /dev/null
+
+sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
+
+sudo chown -R ubuntu:ubuntu /data/
+
+# Update Nginx configuration
+config_update="location /hbnb_static {\n    alias /data/web_static/current/;\n}"
+sudo sed -i "/listen 80 default_server/a $config_update" /etc/nginx/sites-enabled/default
+
+# Restarting Nginx
+sudo service nginx restart
+ubuntu@403446-web-02:~$ ls
+0-block_all_incoming_traffic_but  0-setup_web_static.sh       2-do_deploy_web_static.py  signature.key
+0-custom_http_response_header     1-install_nginx_web_server  mysqlinstall_5.7           temp_mysql_v
+ubuntu@403446-web-02:~$ cat 1-install_nginx_web_server
+#!/usr/bin/env bash
+# Update package list and install nginx with the -y flag for non-interactive installation
+
+echo "Installing Nginx..."
+sudo apt-get update -y
+sudo apt-get install -y nginx
+
+# Configure Nginx
+echo "Configuring Nginx..."
+sudo cat <<EOF | sudo tee /etc/nginx/sites-available/default > /dev/null
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm;
+
+    server_name _;
+
+    location / {
+        return 200 "Hello World!\\n";
+    }
+}
+EOF
+
+# Restart Nginx
+echo "Restarting Nginx..."
+sudo service nginx restart
+
+echo "Nginx installation and configuration completed!"
+ubuntu@403446-web-02:~$ cat 2-do_deploy_web_static.py
+#!/usr/bin/python3
+"""
+Fabric script that distributes an archive to your web servers
+"""
+
+from datetime import datetime
+from fabric.api import *
+import os
+
+env.hosts = ["34.203.29.111", "3.84.158.149"]
+env.user = "ubuntu"
+
+
+def do_pack():
+    """
+        Return the archive path if the archive has generated correctly.
+    """
+    local("mkdir -p versions")
+    date = datetime.now().strftime("%Y%m%d%H%M%S")
+    archived_f_path = "versions/web_static_{}.tgz".format(date)
+    t_gzip_archive = local("tar -cvzf {} web_static".format(archived_f_path))
+
+    if t_gzip_archive.succeeded:
+        return archived_f_path
+    else:
+        return None
+
+
+def do_deploy(archive_path):
+    """Distribute archive."""
+    if not os.path.exists(archive_path):
+        return False
+
+    try:
+        # Extracting information from the archive path
+        archive_filename = os.path.basename(archive_path)
+        version_folder = "/data/web_static/releases/{}/".format(
+            archive_filename[:-4])
+
+        put(archive_path, "/tmp/")
+
+
+        run("sudo mkdir -p {}".format(version_folder))
+        run("sudo tar -xzf /tmp/{} -C {}/".
+            format(archive_filename, version_folder))
+
+        run("sudo rm /tmp/{}".format(archive_filename))
+
+        run("sudo mv -f {}/web_static/* {}".
+            format(version_folder, version_folder))
+
+        run("sudo rm -rf {}/web_static".format(version_folder))
+
+        run("sudo rm -rf /data/web_static/current")
+
+        run("sudo ln -s {} /data/web_static/current".format(version_folder))
+
+        print("New version deployed!")
+        return True
+
+    except Exception as e:
+        return False
+ubuntu@403446-web-02:~$ cat mysqlinstall_5.7
+#!/usr/bin/env bash
+sudo apt update
+sudo apt-key add signature.key
+sudo sh -c 'echo "deb http://repo.mysql.com/apt/ubuntu bionic mysql-5.7" >> /etc/apt/sources.list.d/mysql.list'
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B7B3B788A8D3785C
+sudo apt-get update
+sudo apt-cache policy mysql-server
+sudo apt install -f mysql-client=5.7* mysql-community-server=5.7* mysql-server=5.7*
+ubuntu@403446-web-02:~$ cat temp_mysql_v
+mysql  Ver 14.14 Distrib 5.7.42, for Linux (x86_64) using  EditLine wrapper
